@@ -1,9 +1,16 @@
 package com.algaworks.ordering.domain.entity;
 
+import com.algaworks.ordering.domain.exception.CustomerArchivedException;
+import com.algaworks.ordering.domain.exception.ErrorMessages;
+import com.algaworks.ordering.domain.validator.FieldValidations;
+import org.apache.commons.validator.routines.EmailValidator;
+
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.algaworks.ordering.domain.exception.ErrorMessages.*;
 
 
 public class Customer {
@@ -21,56 +28,75 @@ public class Customer {
     private Integer loyaltyPoints;
 
     public Customer(UUID id, String fullName, LocalDate birthDate, String email, String phone, String document, Boolean promotionNotificationsAllowed, Boolean archived, OffsetDateTime registredAt, OffsetDateTime archivedAt, Integer loyaltyPoints) {
-        this.id = id;
-        this.fullName = fullName;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.phone = phone;
-        this.document = document;
-        this.promotionNotificationsAllowed = promotionNotificationsAllowed;
-        this.archived = archived;
-        this.registredAt = registredAt;
-        this.archivedAt = archivedAt;
-        this.loyaltyPoints = loyaltyPoints;
+        this.setId(id);
+        this.setFullName(fullName);
+        this.setBirthDate(birthDate);
+        this.setEmail(email);
+        this.setPhone(phone);
+        this.setDocument(document);
+        this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
+        this.setArchived(archived);
+        this.setRegistredAt(registredAt);
+        this.setArchivedAt(archivedAt);
+        this.setLoyaltyPoints(loyaltyPoints);
     }
 
     public Customer(UUID id, String fullName, LocalDate birthDate, String email, String phone, String document, Boolean promotionNotificationsAllowed, OffsetDateTime registredAt) {
-        this.id = id;
-        this.fullName = fullName;
-        this.birthDate = birthDate;
-        this.email = email;
-        this.phone = phone;
-        this.document = document;
-        this.promotionNotificationsAllowed = promotionNotificationsAllowed;
-        this.registredAt = registredAt;
+        this.setId(id);
+        this.setFullName(fullName);
+        this.setBirthDate(birthDate);
+        this.setEmail(email);
+        this.setPhone(phone);
+        this.setDocument(document);
+        this.setPromotionNotificationsAllowed(promotionNotificationsAllowed);
+        this.setRegistredAt(registredAt);
+        this.setArchived(false);
+        this.setLoyaltyPoints(0);
     }
 
-    public void addLoyaltyPoints(Integer points) {
-
+    public void addLoyaltyPoints(Integer loyalPointsAdded) {
+        verifyIfChangeable();
+        if (loyalPointsAdded <= 0) {
+            throw new IllegalArgumentException();
+        }
+        this.setLoyaltyPoints(this.loyaltyPoints() + loyalPointsAdded);
     }
 
     public void archive() {
-
+        verifyIfChangeable();
+        this.setArchived(true);
+        this.setArchivedAt(OffsetDateTime.now());
+        this.setFullName("Anonymous");
+        this.setPhone("000-000-0000");
+        this.setDocument("000-00-0000");
+        this.setEmail(UUID.randomUUID()+"@anonymous.com");
+        this.setBirthDate(null);
+        this.setPromotionNotificationsAllowed(false);
     }
 
     public void enablePromotionNotifications() {
+        verifyIfChangeable();
         this.setPromotionNotificationsAllowed(true);
     }
 
     public void disablePromotionNotifications() {
+        verifyIfChangeable();
         this.setPromotionNotificationsAllowed(false);
     }
 
     public void changeName(String fullName) {
+        verifyIfChangeable();
         this.setFullName(fullName);
     }
 
     public void changeEmail(String email) {
+        verifyIfChangeable();
         this.setEmail(email);
     }
 
-    public void changePhone(String email) {
-        this.setEmail(email);
+    public void changePhone(String phone) {
+        verifyIfChangeable();
+        this.setPhone(phone);
     }
 
     public UUID id() {
@@ -118,38 +144,62 @@ public class Customer {
     }
 
     private void setId(UUID id) {
+        Objects.requireNonNull(id);
         this.id = id;
     }
 
     private void setFullName(String fullName) {
+        Objects.requireNonNull(fullName, VALIDATION_ERROR_FULLNAME_IS_NULL);
+        if (fullName.isBlank()) {
+            throw new IllegalArgumentException(VALIDATION_ERROR_FULLNAME_IS_BLANK);
+        }
         this.fullName = fullName;
     }
 
     private void setBirthDate(LocalDate birthDate) {
+        if (Objects.isNull(birthDate)) {
+            this.birthDate = null;
+            return;
+        }
+        if (birthDate.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException(VALIDATION_ERROR_BIRTHDATE_MUST_IN_PAST);
+        }
         this.birthDate = birthDate;
     }
 
     private void setEmail(String email) {
+        FieldValidations.requiresValidEmail(email, VALIDATION_ERROR_EMAIL_IS_INVALID);
         this.email = email;
     }
 
     private void setPhone(String phone) {
+        Objects.requireNonNull(phone);
+        if (phone.isBlank()) {
+            throw new IllegalArgumentException(VALIDATION_ERROR_PHONE_IS_NULL);
+        }
         this.phone = phone;
     }
 
     private void setDocument(String document) {
+        Objects.requireNonNull(document);
+        if (document.isBlank()) {
+            throw new IllegalArgumentException(VALIDATION_ERROR_DOCUMENT_IS_NULL);
+        }
         this.document = document;
     }
 
     private void setPromotionNotificationsAllowed(Boolean promotionNotificationsAllowed) {
+        Objects.requireNonNull(promotionNotificationsAllowed);
         this.promotionNotificationsAllowed = promotionNotificationsAllowed;
     }
 
     private void setArchived(Boolean archived) {
+        Objects.requireNonNull(archived);
         this.archived = archived;
     }
 
     private void setRegistredAt(OffsetDateTime registredAt) {
+        Objects.requireNonNull(registredAt);
         this.registredAt = registredAt;
     }
 
@@ -158,7 +208,17 @@ public class Customer {
     }
 
     private void setLoyaltyPoints(Integer loyaltyPoints) {
+        Objects.requireNonNull(loyaltyPoints);
+        if (loyaltyPoints < 0) {
+            throw new IllegalArgumentException();
+        }
         this.loyaltyPoints = loyaltyPoints;
+    }
+
+    private void verifyIfChangeable() {
+        if (this.isArchived()) {
+            throw new CustomerArchivedException();
+        }
     }
 
     @Override
