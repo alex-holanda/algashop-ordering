@@ -2,6 +2,7 @@ package com.algaworks.ordering.domain.entity;
 
 import com.algaworks.ordering.domain.exception.CustomerArchivedException;
 import com.algaworks.ordering.domain.valueobject.*;
+import lombok.Builder;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
@@ -25,7 +26,8 @@ public class Customer {
     private LoyaltyPoints loyaltyPoints;
     private Address address;
 
-    public static Customer brandNew(
+    @Builder(builderClassName = "BrandNewCustomerBuild", builderMethodName = "brandNew")
+    private static Customer createBrandNew(
             FullName fullName,
             BirthDate birthDate,
             Email email,
@@ -50,7 +52,8 @@ public class Customer {
         );
     }
 
-    public static Customer existing(
+    @Builder(builderClassName = "ExistingCustomerBuild", builderMethodName = "existing")
+    private static Customer createExisting(
             CustomerId id,
             FullName fullName,
             BirthDate birthDate,
