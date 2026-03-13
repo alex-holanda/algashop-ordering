@@ -41,7 +41,7 @@ dependencies {
 }
 
 bootJar {
-    archiveBaseName = 'ordering.jar'
+    archiveBaseName = 'ordering-service'
     archiveVersion = "${version}"
 
     layered {
