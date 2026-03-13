@@ -32,15 +32,15 @@ jobs:
           node-version: 24
 
       - name: Install dependencies
-        run: |
-          npm install \
+        run: npm install \
           semantic-release \
           @semantic-release/github \
           @semantic-release/exec \
           @semantic-release/changelog \
           @semantic-release/git \
           @semantic-release/commit-analyzer \
-          @semantic-release/release-notes-generator
+          @semantic-release/release-notes-generator \
+          conventional-changelog-conventionalcommits
 
       - name: Run semantic-release
         run: npx semantic-release
