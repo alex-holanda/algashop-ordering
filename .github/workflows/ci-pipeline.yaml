@@ -22,6 +22,7 @@ env:
 jobs:
 
   sonar_scan:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     env:
@@ -58,7 +59,9 @@ jobs:
           fi
 
       - name: Run Sonar analysis
-        run: ./gradlew clean build jacocoTestReport sonar
+        run: ./gradlew clean build jacocoTestReport sonar \
+          -Dsonar.token=$SONAR_TOKEN \
+          -Dsonar.branch.name=${{ github.head_ref }}
 
   prepare_version:
     if: github.event_name == 'push'
