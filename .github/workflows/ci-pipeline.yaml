@@ -34,15 +34,6 @@ jobs:
           fi
           VERSION=$(cat .VERSION)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-      - name: Determine version
-        id: version
-        run: |
-          if [ ! -f .VERSION ]; then
-            echo "canary" > .VERSION
-          fi
-
-          VERSION=$(cat .VERSION)
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
   test:
     runs-on: ubuntu-latest
