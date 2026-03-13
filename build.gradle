@@ -41,7 +41,8 @@ dependencies {
 }
 
 bootJar {
-    archiveFileName = 'ordering.jar'
+    archiveBaseName = 'ordering.jar'
+    archiveVersion = "${version}"
 
     layered {
         enabled = true
