@@ -1,0 +1,16 @@
+name: Provision Sonar
+
+on:
+  workflow_dispatch:
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Import repository into SonarCloud
+        run: |
+          curl -u ${{ secrets.SONAR_TOKEN }}: \
+            -X POST "https://sonarcloud.io/api/alm_integrations/import_github_repository" \
+            -d "organization=alex-holanda" \
+            -d "repositoryKey=algashop-ordering"
