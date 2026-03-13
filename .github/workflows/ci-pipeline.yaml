@@ -29,10 +29,18 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          check-latest: true
+          node-version: 24
 
       - name: Install dependencies
-        run: npm install semantic-release @semantic-release/gitlab @semantic-release/exec @semantic-release/changelog @semantic-release/git @semantic-release/commit-analyzer @semantic-release/release-notes-generator
+        run: |
+          npm install \
+          semantic-release \
+          @semantic-release/github \
+          @semantic-release/exec \
+          @semantic-release/changelog \
+          @semantic-release/git \
+          @semantic-release/commit-analyzer \
+          @semantic-release/release-notes-generator
 
       - name: Run semantic-release
         run: npx semantic-release
