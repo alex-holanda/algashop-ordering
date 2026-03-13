@@ -13,45 +13,11 @@ permissions:
   id-token: write
   security-events: write
 
-env:
-  IMAGE_NAME: ${{ github.repository }}
-  PROJECT_KEY: ${{ github.repository_owner }}_${{ github.event.repository.name }}
-  SONAR_ORGANIZATION: ${{ github.repository_owner }}
-
 jobs:
-
-  ensure_sonar_project:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Ensure SonarCloud project exists
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-
-          echo "Checking SonarCloud project..."
-
-          EXISTS=$(curl -s -u $SONAR_TOKEN: \
-            "https://sonarcloud.io/api/projects/search?projects=${PROJECT_KEY}" \
-            | jq '.components | length')
-
-          if [ "$EXISTS" -eq "0" ]; then
-            echo "Creating SonarCloud project..."
-
-            curl -s -u $SONAR_TOKEN: \
-              -X POST "https://sonarcloud.io/api/projects/create" \
-              -d "project=${PROJECT_KEY}" \
-              -d "organization=${SONAR_ORGANIZATION}" \
-              -d "name=${{ github.event.repository.name }}"
-
-          else
-            echo "SonarCloud project already exists"
-          fi
 
   prepare_version:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    needs: ensure_sonar_project
 
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -90,7 +56,8 @@ jobs:
 
   quality:
     runs-on: ubuntu-latest
-    needs: ensure_sonar_project
+    needs: prepare_version
+    if: always()
 
     steps:
       - uses: actions/checkout@v5
@@ -104,10 +71,11 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Run tests + coverage + sonar
+      - name: Test + Coverage + Sonar
         run: |
           ./gradlew clean build jacocoTestReport sonar \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.branch.name=${{ github.ref_name }}
 
   build:
     if: github.event_name == 'push'
@@ -130,5 +98,5 @@ jobs:
 
       - uses: actions/upload-artifact@v6
         with:
-          name: build-artifact
+          name: ordering-service
           path: build/libs/*.jar
