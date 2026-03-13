@@ -1,3 +1,13 @@
+## [1.1.0](https://github.com/alex-holanda/algashop-ordering/compare/v1.0.1...v1.1.0) (2026-03-13)
+
+### Features
+
+* add sonar on PR ([241691b](https://github.com/alex-holanda/algashop-ordering/commit/241691b07d37ebb0faa0c707bc0b73cbc2db05d3))
+
+### Bug Fixes
+
+* sonar organization ([f472095](https://github.com/alex-holanda/algashop-ordering/commit/f472095b8ddadbd6a96fd98791b2b4c122962f34))
+
 ## [1.0.1](https://github.com/alex-holanda/algashop-ordering/compare/v1.0.0...v1.0.1) (2026-03-13)
 
 ### Bug Fixes
