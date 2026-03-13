@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/alex-holanda/algashop-ordering/compare/v1.0.0...v1.0.1) (2026-03-13)
+
+### Bug Fixes
+
+* update prepare_version step ([704621f](https://github.com/alex-holanda/algashop-ordering/commit/704621f91dbfd9329408770b1ccfb5ab05f7914e))
+
 ## 1.0.0 (2026-03-13)
 
 ### Features
