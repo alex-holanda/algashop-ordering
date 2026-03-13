@@ -16,6 +16,7 @@ sonar {
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.projectKey", "alex-holanda_ordering-service"
         property "sonar.organization", "alex-holanda"
+        property "sonar.branch.name", "main"
 
         property "sonar.sources", "src/main/java"
         property "sonar.tests", "src/test/java"
