@@ -21,11 +21,15 @@ env:
 
 jobs:
   prepare_version:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.version.outputs.version }}
+
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v6
         with:
@@ -33,10 +37,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install \
+          npm install --no-fund --no-audit \
             semantic-release \
             @semantic-release/github \
-            @semantic-release/exec \
             @semantic-release/changelog \
             @semantic-release/git \
             @semantic-release/commit-analyzer \
@@ -48,14 +51,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Read version
+      - name: Get version from tag
         id: version
         run: |
-          if [ -f .VERSION ]; then
-            VERSION=$(cat .VERSION)
-          else
-            VERSION=canary
-          fi
+          VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "canary")
+          VERSION=${VERSION#v}
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
   test:
