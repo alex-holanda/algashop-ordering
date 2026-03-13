@@ -26,13 +26,14 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v5
-      - name: Dry run semantic release
+      - name: Determine version
+        id: version
         run: |
-          docker run \
-          -v $PWD:/app \
-          algaworks/devops-semantic-release:v1.0.1 \
-          semantic-release --dry-run --no-ci
-
+          if [ ! -f .VERSION ]; then
+            echo "canary" > .VERSION
+          fi
+          VERSION=$(cat .VERSION)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
       - name: Determine version
         id: version
         run: |
