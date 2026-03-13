@@ -15,7 +15,7 @@ permissions:
 
 env:
   IMAGE_NAME: ${{ github.repository }}
-  PROJECT_KEY: ${{ github.repository_owner }}_${{ github.event.repository.name }}
+  PROJECT_KEY: alex-holanda_algashop-ordering
   SONAR_ORGANIZATION: ${{ github.repository_owner }}
 
 jobs:
