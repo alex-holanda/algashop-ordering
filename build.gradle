@@ -13,6 +13,7 @@ description = 'Ordering microservice'
 
 sonar {
     properties {
+        property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.projectKey", "algashop_ordering-service"
         property "sonar.organization", "algashop"
         property "sonar.coverage.exclusions", "**/OrderingApplication.java"

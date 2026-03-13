@@ -27,6 +27,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-java@v5
         with:
@@ -35,7 +37,7 @@ jobs:
           cache: gradle
 
       - name: Sonar Scan
-        run: ./gradlew sonar -Psonar.qualitygate.wait=true
+        run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN -Psonar.qualitygate.wait=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
