@@ -9,6 +9,7 @@
       "preset": "conventionalcommits",
       "releaseRules": [
         { "breaking": true, "release": "major" },
+        { "revert": true, "release": "patch" },
         { "type": "feat", "release": "minor" },
         { "type": "fix", "release": "patch" },
         { "type": "perf", "release": "patch" },
@@ -22,9 +23,6 @@
     }],
     ["@semantic-release/release-notes-generator", {
       "preset": "conventionalcommits"
-    }],
-    ["@semantic-release/exec", {
-      "prepareCmd": "echo ${nextRelease.version} > .VERSION"
     }],
     ["@semantic-release/changelog", {
       "changelogFile": "CHANGELOG.md"
