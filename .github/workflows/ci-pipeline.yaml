@@ -22,8 +22,10 @@ env:
 jobs:
 
   sonar_scan:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     steps:
       - uses: actions/checkout@v5
@@ -36,10 +38,27 @@ jobs:
           java-version: 21
           cache: gradle
 
-      - name: Sonar Scan
-        run: ./gradlew sonar -Dsonar.token=$SONAR_TOKEN -Psonar.qualitygate.wait=true
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Ensure Sonar project exists
+        run: |
+          PROJECT_KEY="alex-holanda_ordering-service"
+  
+          EXISTS=$(curl -s -u $SONAR_TOKEN: \
+            "https://sonarcloud.io/api/projects/search?projects=$PROJECT_KEY" \
+            | jq '.components | length')
+  
+          if [ "$EXISTS" -eq "0" ]; then
+            echo "Creating Sonar project..."
+            curl -u $SONAR_TOKEN: \
+              -X POST "https://sonarcloud.io/api/projects/create" \
+              -d "project=$PROJECT_KEY" \
+              -d "organization=alex-holanda" \
+              -d "name=Ordering Service"
+          else
+            echo "Sonar project already exists"
+          fi
+
+      - name: Build + Sonar
+        run: ./gradlew build sonar
 
   prepare_version:
     if: github.event_name == 'push'
