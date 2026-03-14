@@ -74,9 +74,9 @@ jobs:
       - name: Test + Coverage + Sonar
         run: |
           ./gradlew clean test jacocoTestReport sonar \
-          --info \
-          -Dsonar.token=$SONAR_TOKEN \
-          -Dsonar.qualitygate.wait=true
+            --info --stacktrace \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.qualitygate.wait=true
 
   build:
     if: github.event_name == 'push'

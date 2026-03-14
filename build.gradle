@@ -11,19 +11,6 @@ group = 'com.algaworks'
 version = findProperty('version') ?: 'canary'
 description = 'Ordering microservice'
 
-sonar {
-    properties {
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.projectKey", "alex-holanda_algashop-ordering"
-        property "sonar.organization", "alex-holanda"
-
-        property "sonar.java.binaries",
-                "${layout.buildDirectory.get()}/classes/java/main"
-
-        property "sonar.coverage.jacoco.xmlReportPaths",
-                "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml"
-    }
-}
 
 java {
 	toolchain {
@@ -31,14 +18,41 @@ java {
 	}
 }
 
+ext {
+    coverageExcludes = [
+            '**/OrderingApplication.class',
+            '**/domain/valueobject/**',
+            '**/domain/exception/**'
+    ]
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-    configureEach {
-        exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+configurations.all {
+    exclude group: 'commons-logging', module: 'commons-logging'
+}
+
+sonar {
+    properties {
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.projectKey",
+                System.getenv("GITHUB_REPOSITORY")?.replace("/", "_")
+        property "sonar.organization", "alex-holanda"
+
+        property "sonar.java.binaries",
+                "${layout.buildDirectory.get()}/classes/java/main"
+
+        property "sonar.coverage.jacoco.xmlReportPaths",
+                "${layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml"
+
+        property "sonar.coverage.exclusions", coverageExcludes.join(',')
     }
 }
+
 
 repositories {
 	mavenCentral()
@@ -70,6 +84,7 @@ tasks.named('test') {
 
     testLogging {
         events "FAILED", "SKIPPED"
+        exceptionFormat "FULL"
     }
 
     finalizedBy jacocoTestReport
@@ -94,11 +109,7 @@ jacocoTestReport {
         classDirectories.setFrom(
                 files(classDirectories.files.collect {
                     fileTree(dir: it,
-                            exclude: [
-                                    '**/OrderingApplication.class',
-                                    '**/domain/valueobject/**',
-                                    '**/domain/exception/**',
-                            ])
+                            exclude: coverageExcludes )
                 })
         )
     }
@@ -106,13 +117,19 @@ jacocoTestReport {
 }
 
 jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.70
+            }
+        }
+    }
+
     afterEvaluate {
         classDirectories.setFrom(
                 files(classDirectories.files.collect {
                     fileTree(dir: it,
-                            exclude: [
-                                    '**/OrderingApplication.class'
-                            ])
+                            exclude: coverageExcludes )
                 })
         )
     }
