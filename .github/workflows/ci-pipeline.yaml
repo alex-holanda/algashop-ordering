@@ -40,7 +40,6 @@ jobs:
             --no-daemon \
             --info --stacktrace
 
-      # 👇 Upload do relatório HTML dos testes
       - name: Upload HTML Test Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -84,7 +83,7 @@ jobs:
 
       - name: Install semantic-release
         run: |
-          npm install --no-fund --no-audit \
+          npm install --no-fund --no-audit --ignore-scripts \
             semantic-release \
             @semantic-release/github \
             @semantic-release/changelog \
