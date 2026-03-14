@@ -14,7 +14,7 @@ description = 'Ordering microservice'
 sonar {
     properties {
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.projectKey", "alex-holanda_ordering-service"
+        property "sonar.projectKey", "alex-holanda_algashop-ordering"
         property "sonar.organization", "alex-holanda"
 
         property "sonar.java.binaries", "${layout.buildDirectory.get()}/classes"
