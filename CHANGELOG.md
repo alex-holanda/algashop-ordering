@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/alex-holanda/algashop-ordering/compare/v1.1.1...v1.2.0) (2026-03-14)
+
+### Features
+
+* add sha for publishing unit test result ([05f1012](https://github.com/alex-holanda/algashop-ordering/commit/05f1012a946260d2f9cdb69c24c27ad2dc18542c))
+
 ## [1.1.1](https://github.com/alex-holanda/algashop-ordering/compare/v1.1.0...v1.1.1) (2026-03-14)
 
 ### Bug Fixes
