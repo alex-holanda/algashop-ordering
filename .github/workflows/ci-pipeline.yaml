@@ -12,6 +12,7 @@ permissions:
   packages: write
   id-token: write
   security-events: write
+  checks: write
 
 jobs:
 
@@ -24,7 +25,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e
         with:
           egress-policy: audit
 
@@ -65,7 +66,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@v2
+        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e
         with:
           egress-policy: audit
 
@@ -80,11 +81,29 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v5
 
-      - name: Test + Coverage + Sonar
+      - name: Run tests
         run: |
-          ./gradlew clean test jacocoTestReport sonar \
+          ./gradlew clean test jacocoTestReport \
             --no-daemon \
-            --info --stacktrace \
+            --info --stacktrace
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: build/test-results/test/*.xml
+
+      - name: Upload HTML Test Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: build/reports/tests/test
+
+      - name: Run Sonar Analysis
+        run: |
+          ./gradlew sonar \
+            --no-daemon \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.qualitygate.wait=true
 
@@ -115,7 +134,8 @@ jobs:
             -Pversion=${{ needs.prepare_version.outputs.version }} \
             --no-daemon
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
           name: ordering-service
           path: build/libs/*.jar
