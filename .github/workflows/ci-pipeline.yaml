@@ -68,7 +68,7 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v5.0.2
 
       - name: Test + Coverage + Sonar
         run: |
@@ -92,7 +92,7 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v5.0.2
 
       - name: Build jar
         run: |
