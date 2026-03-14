@@ -1,3 +1,9 @@
+## [1.1.1](https://github.com/alex-holanda/algashop-ordering/compare/v1.1.0...v1.1.1) (2026-03-14)
+
+### Bug Fixes
+
+* gradle version ([c257e9e](https://github.com/alex-holanda/algashop-ordering/commit/c257e9e500188d069df8790d1f6a5ce9cd7ec3f4))
+
 ## [1.1.0](https://github.com/alex-holanda/algashop-ordering/compare/v1.0.1...v1.1.0) (2026-03-13)
 
 ### Features
