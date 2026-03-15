@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e
+        uses: step-security/harden-runner@58077d3c7e43986b6b15fba718e8ea69e387dfcc
         with:
           egress-policy: audit
 
@@ -42,7 +42,7 @@ jobs:
 
       - name: Upload HTML Test Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-report
           path: build/reports/tests/test
@@ -68,7 +68,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e
+        uses: step-security/harden-runner@58077d3c7e43986b6b15fba718e8ea69e387dfcc
         with:
           egress-policy: audit
 
@@ -115,7 +115,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@5ef0c079ce82195b2a36a210272d6b661572d83e
+        uses: step-security/harden-runner@58077d3c7e43986b6b15fba718e8ea69e387dfcc
         with:
           egress-policy: audit
 
@@ -135,7 +135,7 @@ jobs:
             --no-daemon
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ordering-service
           path: build/libs/*.jar
