@@ -169,7 +169,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ needs.prepare_version.outputs.version }}
+            ${{ env.IMAGE_NAME }}:${{ needs.release.outputs.version }}
             ${{ env.IMAGE_NAME }}:latest
 
   docker_security_scan:
