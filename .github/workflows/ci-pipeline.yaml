@@ -182,6 +182,7 @@ jobs:
         id: push
         uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294
         with:
+          context: .
           push: true
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
