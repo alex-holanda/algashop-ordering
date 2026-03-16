@@ -149,7 +149,7 @@ jobs:
     needs: [build, release]
 
     outputs:
-      digest: ${{ steps.digest.outputs.digest }}
+      digest: ${{ steps.push.outputs.digest }}
 
     steps:
       - name: Harden Runner
@@ -192,11 +192,6 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ needs.release.outputs.version }}
             ${{ env.IMAGE_NAME }}:latest
-
-      - name: Export image digest
-        id: digest
-        run: |
-          echo "digest=${{ steps.push.outputs.digest }}" >> $GITHUB_OUTPUT
 
 
   docker_security_scan:
