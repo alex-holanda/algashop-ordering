@@ -165,6 +165,12 @@ jobs:
           name: ordering-service
           path: build/libs
 
+      - name: Detect jar name
+        id: jar
+        run: |
+          JAR=$(basename build/libs/*.jar)
+          echo "jar=$JAR" >> $GITHUB_OUTPUT
+
       - uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd
 
       - uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2
@@ -180,6 +186,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            JAR_NAME=${{ steps.jar.outputs.jar }}
           tags: |
             ${{ env.IMAGE_NAME }}:${{ needs.release.outputs.version }}
             ${{ env.IMAGE_NAME }}:latest
