@@ -129,6 +129,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: release
 
+    permissions:
+      contents: read
+
     steps:
       - uses: actions/checkout@v5
 
@@ -145,10 +148,13 @@ jobs:
             -Pversion=${{ needs.release.outputs.version }} \
             --no-daemon
 
-      # NOVO STEP
       - name: Generate SBOM
         run: |
           ./gradlew cyclonedxBom --no-daemon
+
+      - name: Prepare SBOM
+        run: |
+          cp build/reports/cyclonedx/bom.json sbom.json
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v7
@@ -156,12 +162,11 @@ jobs:
           name: ordering-service
           path: build/libs/*.jar
 
-      # NOVO ARTIFACT
       - name: Upload SBOM
         uses: actions/upload-artifact@v7
         with:
           name: sbom
-          path: build/reports/bom.json
+          path: sbom.json
 
 
   # ------------------------------------------------
@@ -171,6 +176,9 @@ jobs:
   docker_build_and_push:
     runs-on: ubuntu-latest
     needs: [build, release]
+
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v5
@@ -218,7 +226,7 @@ jobs:
         with:
           name: image-digest
           path: digest.txt
-  
+
 
   # ------------------------------------------------
   # SECURITY SCAN
@@ -227,6 +235,9 @@ jobs:
   docker_security_scan:
     runs-on: ubuntu-latest
     needs: docker_build_and_push
+
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/download-artifact@v4
@@ -292,6 +303,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: sign_image
 
+    permissions:
+      contents: read
+
     steps:
       - uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22
 
@@ -311,7 +325,11 @@ jobs:
             --certificate-identity-regexp "https://github.com/alex-holanda/algashop-ordering/.github/workflows/.*" \
             --certificate-oidc-issuer https://token.actions.githubusercontent.com \
             ${{ env.IMAGE_NAME }}@${{ steps.digest.outputs.digest }}
-          
+  
+
+  # ------------------------------------------------
+  # SBOM ATTESTATION
+  # ------------------------------------------------
 
   attest_sbom:
     runs-on: ubuntu-latest
@@ -342,6 +360,6 @@ jobs:
         run: |
           cosign attest \
             --yes \
-            --predicate bom.json \
+            --predicate sbom.json \
             --type cyclonedx \
             ${{ env.IMAGE_NAME }}@${{ steps.digest.outputs.digest }}
