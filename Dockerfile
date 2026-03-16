@@ -46,6 +46,8 @@ ENV JAVA_HOME=/jre \
 WORKDIR /app
 
 RUN set -eux \
+ && apk update \
+ && apk upgrade --no-cache \
  && addgroup -S spring \
  && adduser -S -G spring spring \
  && apk add --no-cache tzdata curl \
