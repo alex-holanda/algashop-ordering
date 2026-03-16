@@ -1,3 +1,9 @@
+## [1.2.2](https://github.com/alex-holanda/algashop-ordering/compare/v1.2.1...v1.2.2) (2026-03-16)
+
+### Bug Fixes
+
+* verify signature ([452f75d](https://github.com/alex-holanda/algashop-ordering/commit/452f75d36e8158959df4d52d36d8c0ec7696b64d))
+
 ## [1.2.1](https://github.com/alex-holanda/algashop-ordering/compare/v1.2.0...v1.2.1) (2026-03-16)
 
 ### Bug Fixes
