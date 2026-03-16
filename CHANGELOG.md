@@ -1,3 +1,9 @@
+## [1.2.3](https://github.com/alex-holanda/algashop-ordering/compare/v1.2.2...v1.2.3) (2026-03-16)
+
+### Bug Fixes
+
+* fix the docker step ([93700f3](https://github.com/alex-holanda/algashop-ordering/commit/93700f30bda5e8acbb1ecb4909a1ce4d72986593))
+
 ## [1.2.2](https://github.com/alex-holanda/algashop-ordering/compare/v1.2.1...v1.2.2) (2026-03-16)
 
 ### Bug Fixes
