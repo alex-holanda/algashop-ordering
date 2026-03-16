@@ -1,3 +1,9 @@
+## [1.2.5](https://github.com/alex-holanda/algashop-ordering/compare/v1.2.4...v1.2.5) (2026-03-16)
+
+### Bug Fixes
+
+* docker, sign and verify ([2e31717](https://github.com/alex-holanda/algashop-ordering/commit/2e31717ead7f7e5ed585bf46f2ba113eba396e93))
+
 ## [1.2.4](https://github.com/alex-holanda/algashop-ordering/compare/v1.2.3...v1.2.4) (2026-03-16)
 
 ### Bug Fixes
