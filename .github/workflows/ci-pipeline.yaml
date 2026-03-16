@@ -216,7 +216,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: sigstore/cosign-installer@v3
+      - uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22
 
       - uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2
         with:
@@ -226,7 +226,7 @@ jobs:
       - name: Sign image by digest
         run: |
           cosign sign --yes \
-          ${{ env.IMAGE_NAME }}@${{ needs.docker_build_and_push.outputs.digest }}
+            ${{ env.IMAGE_NAME }}@${{ needs.docker_build_and_push.outputs.digest }}
 
 
   verify_signature:
@@ -234,9 +234,11 @@ jobs:
     needs: sign_image
 
     steps:
-      - uses: sigstore/cosign-installer@v3
+      - uses: sigstore/cosign-installer@ba7bc0a3fef59531c69a25acd34668d6d3fe6f22
 
       - name: Verify signature
         run: |
           cosign verify \
-          ${{ env.IMAGE_NAME }}@${{ needs.docker_build_and_push.outputs.digest }}
+            --certificate-identity-regexp "https://github.com/alex-holanda/algashop-ordering/.github/workflows/.*" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            ${{ env.IMAGE_NAME }}@${{ needs.docker_build_and_push.outputs.digest }}
