@@ -1,3 +1,9 @@
+## [1.2.1](https://github.com/alex-holanda/algashop-ordering/compare/v1.2.0...v1.2.1) (2026-03-16)
+
+### Bug Fixes
+
+* scan step updated to critical only ([0266e3e](https://github.com/alex-holanda/algashop-ordering/commit/0266e3e8e0636ade37eaaa5f93036149d0705e20))
+
 ## [1.2.0](https://github.com/alex-holanda/algashop-ordering/compare/v1.1.1...v1.2.0) (2026-03-14)
 
 ### Features
